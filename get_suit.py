@@ -25,14 +25,17 @@ def get_all_suit(query=None, refresh=0, page=0):
 
         res = res.json()
         for cat in res['data']['category']:
-            for suit in cat['suits']:
-                base_list.append({
-                    'name': suit['name'],
-                    'item_id': suit['item_id'],
-                    'category': cat['name'],
-                    'desc': suit['properties']['desc'],
-                    'cover': suit['properties']['image_cover']
-                })
+            try:
+                for suit in cat['suits']:
+                    base_list.append({
+                        'name': suit['name'],
+                        'item_id': suit['item_id'],
+                        'category': cat['name'],
+                        'desc': suit['properties']['desc'],
+                        'cover': suit['properties']['image_cover']
+                    })
+            except TypeError:
+                continue
         try:
             with open('suit_list.json', 'w', encoding='utf-8') as json_file:
                 json_file.write(dumps(base_list, ensure_ascii=False))
@@ -165,17 +168,27 @@ def get_suit(suit_id, base_dir='./src/'):
     # part 3. Others
     if not osPathExists(base_dir + '/properties/'):
         osMakedirs(base_dir + '/properties/')
-    pro_list = [
-        ('properties.zip',
-         res['data']['suit_items']['skin'][0]['properties']['package_url']),
-        ('fan_share_image.jpg',
-         res['data']['item']['properties']['fan_share_image']),
-        ('image_cover.jpg', res['data']['item']['properties']['image_cover']),
-        ('avatar.jpg', res['data']['fan_user']['avatar']),
-        ('thumbup.jpg',
-         res['data']['suit_items']['thumbup'][0]['properties']['image_preview']
-         )
-    ]
+    try:
+        pro_list = [
+            ('properties.zip',
+             res['data']['suit_items']['skin'][0]['properties']['package_url']),
+            ('fan_share_image.jpg',
+             res['data']['item']['properties']['fan_share_image']),
+            ('image_cover.jpg', res['data']['item']['properties']['image_cover']),
+            ('avatar.jpg', res['data']['fan_user']['avatar']),
+            ('thumbup.jpg',
+             res['data']['suit_items']['thumbup'][0]['properties']['image_preview']
+             )
+        ]
+    except:
+        pro_list = [
+            ('properties.zip',
+             res['data']['suit_items']['skin'][0]['properties']['package_url']),
+            ('fan_share_image.jpg',
+             res['data']['item']['properties']['fan_share_image']),
+            ('image_cover.jpg', res['data']['item']['properties']['image_cover']),
+            ('avatar.jpg', res['data']['fan_user']['avatar'])
+        ]
     for item in pro_list:
         try:
             with open(base_dir + '/properties/' + item[0], 'wb') as pro_file:
