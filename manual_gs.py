@@ -87,25 +87,86 @@ def get_suit(suit_id, base_dir='./src/'):
         osMakedirs(base_dir + '/properties/')
     try:
         pro_list = [
-            ('properties.zip',
-             res['data']['suit_items']['skin'][0]['properties']['package_url']),
-            ('fan_share_image.jpg',
-             res['data']['item']['properties']['fan_share_image']),
-            ('image_cover.jpg', res['data']['item']['properties']['image_cover']),
-            ('avatar.jpg', res['data']['fan_user']['avatar']),
-            ('thumbup.jpg',
-             res['data']['suit_items']['thumbup'][0]['properties']['image_preview']
-             )
-        ]
-    except:
-        pro_list = [
-            ('properties.zip',
+            ('skin_properties.zip',
              res['data']['suit_items']['skin'][0]['properties']['package_url']),
             ('fan_share_image.jpg',
              res['data']['item']['properties']['fan_share_image']),
             ('image_cover.jpg', res['data']['item']['properties']['image_cover']),
             ('avatar.jpg', res['data']['fan_user']['avatar'])
         ]
+    except Exception as e:
+        print(str(e))
+
+    try:
+        pro_list.append(
+            ('card_bg.png', res['data']['suit_items']['card_bg'][0]['properties']['image_preview_small'])
+            )
+    except:
+        pass
+
+    try:
+        pro_list.append(
+            ('card.png', res['data']['suit_items']['card'][0]['properties']['image'])
+            )
+    except:
+        pass
+    
+    try:
+        pro_list.append(
+            ('fans_card.png', res['data']['suit_items']['card'][1]['properties']['image_preview_small'])
+            )
+    except:
+        pass
+
+    try:
+        pro_list.append(
+            ('thumbup.png',res['data']['suit_items']['thumbup'][0]['properties']['image_preview'])
+            )
+    except:
+        pass
+    
+    try:
+        pro_list.append(
+            ('loading.webp', res['data']['suit_items']['loading'][0]['properties']['loading_url'])
+            )
+    except:
+        pass
+    
+    try:
+        pro_list.append(
+            ('loading_preview.png', res['data']['suit_items']['loading'][0]['properties']['image_preview_small'])
+            )
+    except:
+        pass
+    
+    try:
+        pro_list.append(
+            ('pendant.png', res['data']['suit_items']['pendant'][0]['properties']['image'])
+            )
+    except:
+        pass
+    
+    try:
+        pro_list.append(
+            ('play_icon.png', res['data']['suit_items']['play_icon'][0]['properties']['static_icon_image'])
+            )
+    except:
+        pass
+
+    try:
+        pro_list.append(
+            ('play_icon_left.png', res['data']['suit_items']['play_icon'][0]['properties']['drag_left_png'])
+            )
+    except:
+        pass
+
+    try:
+        pro_list.append(
+            ('play_icon_right.png', res['data']['suit_items']['play_icon'][0]['properties']['drag_right_png'])
+            )
+    except:
+        pass
+    
     for item in pro_list:
         try:
             with open(base_dir + '/properties/' + item[0], 'wb') as pro_file:
