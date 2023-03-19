@@ -200,7 +200,9 @@ def get_suit(suit_id, base_dir='./src/'):
             ('fans_card.png', res['data']['suit_items']['card'][1]['properties']['image_preview_small'])
             )
     except:
-        pass
+        pro_list.append(
+            ('fans_card.png', res['data']['suit_items']['card'][1]['properties']['image'])
+            )
 
     try:
         pro_list.append(
