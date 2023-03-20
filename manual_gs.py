@@ -50,7 +50,6 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
                       'wb') as emoji_file:
                 emoji_file.write(rqGet(item[1]).content)
         except OSError:
-            #errors._show_error(4)
             img_name = img_name.split('_')[0] + '_{}'.format(i)
             try:
                 with open(base_dir + '/emoji/' + img_name + '.png', 'wb') as emoji_file:
@@ -58,8 +57,6 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
             except:
                 pass
         except Exception as e:
-            #errors._show_error(1)
-            #return dict(), 1
             print('Error2:\n'+str(e)+'\n')
 
     # part 2. Background
@@ -102,20 +99,15 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
             )
     except:
         pass
-
+    
     try:
-        pro_list.append(
-            ('skin_properties_1.zip',res['data']['suit_items']['skin'][0]['properties']['package_url'])
-            )
-        pro_list.append(
-            ('skin_properties_2.zip',res['data']['suit_items']['skin'][1]['properties']['package_url'])
-            )
-    except KeyError:
-        pro_list.append(
-            ('skin_properties.zip',res['data']['suit_items']['skin'][0]['properties']['package_url'])
-            )
+        spro_list = res['data']['suit_items']['skin']
     except Exception as e:
         print('Error5:\n'+str(e)+'\n')
+    for i,spro in enumerate(spro_list):
+        pro_list.append(
+            (f'skin_properties_{i+1}.zip', spro['properties']['package_url'])
+            )
 
     try:
         pro_list.append(

@@ -204,19 +204,14 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
         pass
 
     try:
-        pro_list.append(
-            ('skin_properties_1.zip',res['data']['suit_items']['skin'][0]['properties']['package_url'])
-            )
-        pro_list.append(
-            ('skin_properties_2.zip',res['data']['suit_items']['skin'][1]['properties']['package_url'])
-            )
-    except KeyError:
-        pro_list.append(
-            ('skin_properties.zip',res['data']['suit_items']['skin'][0]['properties']['package_url'])
-            )
+        spro_list = res['data']['suit_items']['skin']
     except:
         errors._show_error(5)
         return dict(), 1
+    for i,spro in enumerate(spro_list):
+        pro_list.append(
+            (f'skin_properties_{i+1}.zip', spro['properties']['package_url'])
+            )
 
     try:
         pro_list.append(
