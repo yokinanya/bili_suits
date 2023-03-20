@@ -1,11 +1,9 @@
 from requests import get as rqGet
 from os.path import exists as osPathExists
 from os import makedirs as osMakedirs
-import errors
 from json import dumps, loads
-from math import ceil
 
-def get_suit(suit_id, base_dir='./src/'):
+def get_suit(suit_id, base_dir='./Bsuits/'):
     '''
     获取单个装扮素材
 
@@ -18,15 +16,16 @@ def get_suit(suit_id, base_dir='./src/'):
         rq_get = rqGet(
             'https://api.bilibili.com/x/garb/mall/item/suit/v2?&part=suit&item_id='
             + str(suit_id))
-    except:
-        errors._show_error(1)
-        return dict(), 1
+    except Exception as e:
+        #errors._show_error(1)
+        #return dict(), 1
+        print('Error1:\n'+str(e)+'\n')
 
     res = rq_get.json()
 
-    if res['data']['item']['item_id'] == 0:
-        errors._show_error(0)
-        return dict(), 0
+    #if res['data']['item']['item_id'] == 0:
+        #errors._show_error(0)
+        #return dict(), 0
 
     base_dir += res['data']['item']['name']
 
@@ -51,16 +50,17 @@ def get_suit(suit_id, base_dir='./src/'):
                       'wb') as emoji_file:
                 emoji_file.write(rqGet(item[1]).content)
         except OSError:
-            errors._show_error(4)
+            #errors._show_error(4)
             img_name = img_name.split('_')[0] + '_{}'.format(i)
             try:
                 with open(base_dir + '/emoji/' + img_name + '.png', 'wb') as emoji_file:
                     emoji_file.write(rqGet(item[1]).content)
             except:
                 pass
-        except:
-            errors._show_error(1)
-            return dict(), 1
+        except Exception as e:
+            #errors._show_error(1)
+            #return dict(), 1
+            print('Error2:\n'+str(e)+'\n')
 
     # part 2. Background
     bg_dict = res['data']['suit_items']['space_bg'][0]['properties']
@@ -78,9 +78,10 @@ def get_suit(suit_id, base_dir='./src/'):
             with open(base_dir + '/background/' + item[0] + '.jpg',
                       'wb') as bg_file:
                 bg_file.write(rqGet(item[1]).content)
-        except:
-            errors._show_error(1)
-            return dict(), 1
+        except Exception as e:
+            #errors._show_error(1)
+            #return dict(), 1
+            print('Error3:\n'+str(e)+'\n')
 
     # part 3. Others
     if not osPathExists(base_dir + '/properties/'):
@@ -95,30 +96,31 @@ def get_suit(suit_id, base_dir='./src/'):
             ('avatar.jpg', res['data']['fan_user']['avatar'])
         ]
     except Exception as e:
-        print(str(e))
+        print('Error4:\n'+str(e)+'\n')
 
     try:
         pro_list.append(
-            ('card_bg.png', res['data']['suit_items']['card_bg'][0]['properties']['image_preview_small'])
+            ('comment_bg.png', res['data']['suit_items']['card_bg'][0]['properties']['image_preview_small'])
             )
     except:
         pass
 
     try:
+        pro_list.append(
+            ('card_fans.png', res['data']['suit_items']['card'][0]['properties']['image_preview_small'])
+            )
+        pro_list.append(
+            ('card.png', res['data']['suit_items']['card'][1]['properties']['image'])
+            )
+    except KeyError:
+        pro_list.append(
+            ('card_fans.png', res['data']['suit_items']['card'][1]['properties']['image_preview_small'])
+            )
         pro_list.append(
             ('card.png', res['data']['suit_items']['card'][0]['properties']['image'])
             )
-    except:
-        pass
-    
-    try:
-        pro_list.append(
-            ('fans_card.png', res['data']['suit_items']['card'][1]['properties']['image_preview_small'])
-            )
-    except:
-        pro_list.append(
-            ('fans_card.png', res['data']['suit_items']['card'][1]['properties']['image'])
-            )
+    except Exception as e:
+        print('Error5:\n'+str(e)+'\n')
 
     try:
         pro_list.append(
@@ -173,11 +175,12 @@ def get_suit(suit_id, base_dir='./src/'):
         try:
             with open(base_dir + '/properties/' + item[0], 'wb') as pro_file:
                 pro_file.write(rqGet(item[1]).content)
-        except:
-            errors._show_error(1)
-            return dict(), 1
+        except Exception as e:
+            #errors._show_error(1)
+            #return dict(), 1
+            print('Error1:\n'+str(e)+'\n')
 
-    return res
+    #return res
 while True:
     sid = eval(input("sid: ").strip())
     get_suit(sid)

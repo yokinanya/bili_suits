@@ -85,9 +85,7 @@ def get_all_suit(query=None, refresh=0, page=0):
                 return list(), 0, 0, 1
     return base_list, total_page, page, 100
 
-def 
-
-def get_suit(suit_id, base_dir='./src/'):
+def get_suit(suit_id, base_dir='./Bsuits/'):
     '''
     获取单个装扮素材
 
@@ -178,31 +176,35 @@ def get_suit(suit_id, base_dir='./src/'):
             ('image_cover.jpg', res['data']['item']['properties']['image_cover']),
             ('avatar.jpg', res['data']['fan_user']['avatar'])
         ]
-    except Exception as e:
-        print(str(e))
+    except:
+        errors._show_error(1)
+        return dict(), 1
 
     try:
         pro_list.append(
-            ('card_bg.png', res['data']['suit_items']['card_bg'][0]['properties']['image_preview_small'])
+            ('comment_bg.png', res['data']['suit_items']['card_bg'][0]['properties']['image_preview_small'])
             )
     except:
         pass
 
     try:
+        pro_list.append(
+            ('card_fans.png', res['data']['suit_items']['card'][0]['properties']['image_preview_small'])
+            )
+        pro_list.append(
+            ('card.png', res['data']['suit_items']['card'][1]['properties']['image'])
+            )
+    except KeyError:
+        pro_list.append(
+            ('card_fans.png', res['data']['suit_items']['card'][1]['properties']['image_preview_small'])
+            )
         pro_list.append(
             ('card.png', res['data']['suit_items']['card'][0]['properties']['image'])
             )
     except:
-        pass
-    
-    try:
-        pro_list.append(
-            ('fans_card.png', res['data']['suit_items']['card'][1]['properties']['image_preview_small'])
-            )
-    except:
-        pro_list.append(
-            ('fans_card.png', res['data']['suit_items']['card'][1]['properties']['image'])
-            )
+        errors._show_error(1)
+        return dict(), 1
+
 
     try:
         pro_list.append(
