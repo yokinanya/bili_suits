@@ -25,7 +25,7 @@ def get_suit(suit_id, base_dir='./src/'):
         suit_info = 'https://api.bilibili.com/x/garb/mall/item/suit/v2?&part=suit&item_id='+ str(suit_id)
         rq_get = rq.request('GET' , suit_info , headers = ua)
     except Exception as e:
-        print(e)
+        print('Error1:\n'+str(e)+'\n')
 
     res = loads(rq_get.data.decode())
 
@@ -63,7 +63,7 @@ def get_suit(suit_id, base_dir='./src/'):
             except:
                 pass
         except Exception as e:
-            print(e)
+            print('Error2:\n'+str(e)+'\n')
 
     # part 2. Background
     bg_dict = res['data']['suit_items']['space_bg'][0]['properties']
@@ -82,7 +82,7 @@ def get_suit(suit_id, base_dir='./src/'):
                       'wb') as bg_file:
                 bg_file.write(rq.request('GET' , item[1]).data)
         except Exception as e:
-            print(e)
+            print('Error3:\n'+str(e)+'\n')
 
     # part 3. Others
     if not osPathExists(base_dir + '/properties/'):
@@ -97,30 +97,31 @@ def get_suit(suit_id, base_dir='./src/'):
             ('avatar.jpg', res['data']['fan_user']['avatar'])
         ]
     except Exception as e:
-        print(str(e))
+        print('Error4:\n'+str(e)+'\n')
 
     try:
         pro_list.append(
-            ('card_bg.png', res['data']['suit_items']['card_bg'][0]['properties']['image_preview_small'])
-            )
-    except:
-        pass
-
-    try:
-        pro_list.append(
-            ('card.png', res['data']['suit_items']['card'][0]['properties']['image'])
+            ('comment_bg.png', res['data']['suit_items']['card_bg'][0]['properties']['image_preview_small'])
             )
     except:
         pass
     
     try:
         pro_list.append(
-            ('fans_card.png', res['data']['suit_items']['card'][1]['properties']['image_preview_small'])
+            ('card_fans.png', res['data']['suit_items']['card'][0]['properties']['image_preview_small'])
             )
-    except:
         pro_list.append(
-            ('fans_card.png', res['data']['suit_items']['card'][1]['properties']['image'])
+            ('card.png', res['data']['suit_items']['card'][1]['properties']['image'])
             )
+    except KeyError:
+        pro_list.append(
+            ('card_fans.png', res['data']['suit_items']['card'][1]['properties']['image_preview_small'])
+            )
+        pro_list.append(
+            ('card.png', res['data']['suit_items']['card'][0]['properties']['image'])
+            )
+    except Exception as e:
+        print('Error5:\n'+str(e)+'\n')
 
     try:
         pro_list.append(
@@ -176,7 +177,7 @@ def get_suit(suit_id, base_dir='./src/'):
             with open(base_dir + '/properties/' + item[0], 'wb') as pro_file:
                 pro_file.write(rq.request('GET' , item[1]).data)
         except Exception as e:
-            print(e)
+            print('Error6:\n'+str(e)+'\n')
 
     return res
 while True:
