@@ -12,7 +12,7 @@ ub.util.ssl_.DEFAULT_CIPHERS = "TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-GCM
 rq = ub.PoolManager(cert_reqs = 'CERT_NONE')
 ub.disable_warnings()
 
-def get_suit(suit_id, base_dir='./src/'):
+def get_suit(suit_id, base_dir='./Bsuits/'):
     '''
     获取单个装扮素材
 
