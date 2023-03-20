@@ -88,8 +88,6 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
         osMakedirs(base_dir + '/properties/')
     try:
         pro_list = [
-            ('skin_properties.zip',
-             res['data']['suit_items']['skin'][0]['properties']['package_url']),
             ('fan_share_image.jpg',
              res['data']['item']['properties']['fan_share_image']),
             ('image_cover.jpg', res['data']['item']['properties']['image_cover']),
@@ -107,6 +105,20 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
 
     try:
         pro_list.append(
+            ('skin_properties_1.zip',res['data']['suit_items']['skin'][0]['properties']['package_url'])
+            )
+        pro_list.append(
+            ('skin_properties_2.zip',res['data']['suit_items']['skin'][1]['properties']['package_url'])
+            )
+    except KeyError:
+        pro_list.append(
+            ('skin_properties.zip',res['data']['suit_items']['skin'][0]['properties']['package_url'])
+            )
+    except Exception as e:
+        print('Error5:\n'+str(e)+'\n')
+
+    try:
+        pro_list.append(
             ('card_fans.png', res['data']['suit_items']['card'][0]['properties']['image_preview_small'])
             )
         pro_list.append(
@@ -120,7 +132,7 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
             ('card.png', res['data']['suit_items']['card'][0]['properties']['image'])
             )
     except Exception as e:
-        print('Error5:\n'+str(e)+'\n')
+        print('Error6:\n'+str(e)+'\n')
 
     try:
         pro_list.append(
@@ -178,7 +190,7 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
         except Exception as e:
             #errors._show_error(1)
             #return dict(), 1
-            print('Error1:\n'+str(e)+'\n')
+            print('Error7:\n'+str(e)+'\n')
 
     #return res
 while True:

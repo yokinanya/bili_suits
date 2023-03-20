@@ -169,8 +169,6 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
         osMakedirs(base_dir + '/properties/')
     try:
         pro_list = [
-            ('skin_properties.zip',
-             res['data']['suit_items']['skin'][0]['properties']['package_url']),
             ('fan_share_image.jpg',
              res['data']['item']['properties']['fan_share_image']),
             ('image_cover.jpg', res['data']['item']['properties']['image_cover']),
@@ -188,6 +186,39 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
         pass
 
     try:
+        pro_list = [
+            ('fan_share_image.jpg',
+             res['data']['item']['properties']['fan_share_image']),
+            ('image_cover.jpg', res['data']['item']['properties']['image_cover']),
+            ('avatar.jpg', res['data']['fan_user']['avatar'])
+        ]
+    except:
+        errors._show_error(5)
+        return dict(), 1
+
+    try:
+        pro_list.append(
+            ('comment_bg.png', res['data']['suit_items']['card_bg'][0]['properties']['image_preview_small'])
+            )
+    except:
+        pass
+
+    try:
+        pro_list.append(
+            ('skin_properties_1.zip',res['data']['suit_items']['skin'][0]['properties']['package_url'])
+            )
+        pro_list.append(
+            ('skin_properties_2.zip',res['data']['suit_items']['skin'][1]['properties']['package_url'])
+            )
+    except KeyError:
+        pro_list.append(
+            ('skin_properties.zip',res['data']['suit_items']['skin'][0]['properties']['package_url'])
+            )
+    except:
+        errors._show_error(5)
+        return dict(), 1
+
+    try:
         pro_list.append(
             ('card_fans.png', res['data']['suit_items']['card'][0]['properties']['image_preview_small'])
             )
@@ -202,7 +233,7 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
             ('card.png', res['data']['suit_items']['card'][0]['properties']['image'])
             )
     except:
-        errors._show_error(1)
+        errors._show_error(5)
         return dict(), 1
 
 
