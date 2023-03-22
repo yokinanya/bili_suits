@@ -33,13 +33,21 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
         #errors._show_error(0)
         #return dict(), 0
 
-    base_dir += res['data']['item']['name']
-
     # Save suit !!
-    if not osPathExists(base_dir):
-        osMakedirs(base_dir)
-    with open(base_dir + '/suit_info.json', 'w', encoding='utf-8') as suit_json_file:
-        suit_json_file.write(str(rq_get.data.decode()))
+    if res['data']['item']['name']:
+        base_dir += res['data']['item']['name']
+        if not osPathExists(base_dir):
+            osMakedirs(base_dir)
+        with open(base_dir + '/suit_info.json', 'w', encoding='utf-8') as suit_json_file:
+            suit_json_file.write(str(rq_get.data.decode()))
+    else:
+        base_dir += str(suit_id)
+        if not osPathExists(base_dir):
+            osMakedirs(base_dir)
+        with open(base_dir + '/suit_info.json', 'w', encoding='utf-8') as suit_json_file:
+            suit_json_file.write(str(rq_get.data.decode()))
+        print('Fail to match any suit with this number')
+        return
 
     # part 1. Emoji
     emoji_list = [
@@ -120,15 +128,18 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
         pro_list.append(
             ('card.png', res['data']['suit_items']['card'][1]['properties']['image'])
             )
-    except KeyError:
+    except:
+        pass
+        
+    try:
         pro_list.append(
             ('card_fans.png', res['data']['suit_items']['card'][1]['properties']['image_preview_small'])
             )
         pro_list.append(
             ('card.png', res['data']['suit_items']['card'][0]['properties']['image'])
             )
-    except Exception as e:
-        print('Error6:\n'+str(e)+'\n')
+    except:
+        pass
 
     try:
         pro_list.append(
@@ -184,9 +195,9 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
             with open(base_dir + '/properties/' + item[0], 'wb') as pro_file:
                 pro_file.write(rq.request('GET' , item[1]).data)
         except Exception as e:
-            print('Error7:\n'+str(e)+'\n')
+            print('Error6:\n'+str(e)+'\n')
 
-    return res
+    #return res
 while True:
     sid = eval(input("sid: ").strip())
     get_suit(sid)
