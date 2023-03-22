@@ -106,12 +106,12 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
 
     try:
         spro_list = res['data']['suit_items']['skin']
-    except Exception as e:
-        print('Error5:\n'+str(e)+'\n')
-    for i,spro in enumerate(spro_list):
-        pro_list.append(
+        for i,spro in enumerate(spro_list):
+            pro_list.append(
             (f'skin_properties_{i+1}.zip', spro['properties']['package_url'])
             )
+    except Exception as e:
+        print('Error5:\n'+str(e)+'\n')
     
     try:
         pro_list.append(
