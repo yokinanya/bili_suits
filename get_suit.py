@@ -205,13 +205,13 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
 
     try:
         spro_list = res['data']['suit_items']['skin']
+        for i,spro in enumerate(spro_list):
+            pro_list.append(
+            (f'skin_properties_{i+1}.zip', spro['properties']['package_url'])
+            )
     except:
         errors._show_error(5)
         return dict(), 1
-    for i,spro in enumerate(spro_list):
-        pro_list.append(
-            (f'skin_properties_{i+1}.zip', spro['properties']['package_url'])
-            )
 
     try:
         pro_list.append(
@@ -220,7 +220,10 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
         pro_list.append(
             ('card.png', res['data']['suit_items']['card'][1]['properties']['image'])
             )
-    except KeyError:
+    except:
+        pass
+        
+    try:
         pro_list.append(
             ('card_fans.png', res['data']['suit_items']['card'][1]['properties']['image_preview_small'])
             )
@@ -228,8 +231,7 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
             ('card.png', res['data']['suit_items']['card'][0]['properties']['image'])
             )
     except:
-        errors._show_error(5)
-        return dict(), 1
+        pass
 
 
     try:
