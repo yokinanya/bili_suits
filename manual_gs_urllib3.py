@@ -15,7 +15,6 @@ ub.disable_warnings()
 def get_suit(suit_id, base_dir='./Bsuits/'):
     '''
     获取单个装扮素材
-
     输入:
         - suit_id: 装扮ID
         - base_dir: 存储路径
@@ -26,6 +25,7 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
         rq_get = rq.request('GET' , suit_info , headers = ua)
     except Exception as e:
         print('Error1:\n'+str(e)+'\n')
+        return
 
     res = loads(rq_get.data.decode())
 
@@ -72,6 +72,7 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
                 pass
         except Exception as e:
             print('Error2:\n'+str(e)+'\n')
+            return
 
     # part 2. Background
     bg_dict = res['data']['suit_items']['space_bg'][0]['properties']
@@ -91,6 +92,7 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
                 bg_file.write(rq.request('GET' , item[1]).data)
         except Exception as e:
             print('Error3:\n'+str(e)+'\n')
+            return
 
     # part 3. Others
     if not osPathExists(base_dir + '/properties/'):
@@ -104,6 +106,7 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
         ]
     except Exception as e:
         print('Error4:\n'+str(e)+'\n')
+        return
 
     try:
         pro_list.append(
@@ -196,6 +199,7 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
                 pro_file.write(rq.request('GET' , item[1]).data)
         except Exception as e:
             print('Error6:\n'+str(e)+'\n')
+            return
 
     #return res
 while True:

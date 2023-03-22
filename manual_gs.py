@@ -18,6 +18,7 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
             + str(suit_id))
     except Exception as e:
         print('Error1:\n'+str(e)+'\n')
+        return
 
     res = rq_get.json()
 
@@ -62,6 +63,7 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
                 pass
         except Exception as e:
             print('Error2:\n'+str(e)+'\n')
+            return
 
     # part 2. Background
     bg_dict = res['data']['suit_items']['space_bg'][0]['properties']
@@ -81,6 +83,7 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
                 bg_file.write(rqGet(item[1]).content)
         except Exception as e:
             print('Error3:\n'+str(e)+'\n')
+            return
 
     # part 3. Others
     if not osPathExists(base_dir + '/properties/'):
@@ -94,6 +97,7 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
         ]
     except Exception as e:
         print('Error4:\n'+str(e)+'\n')
+        return
 
     try:
         pro_list.append(
@@ -186,6 +190,7 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
                 pro_file.write(rqGet(item[1]).content)
         except Exception as e:
             print('Error6:\n'+str(e)+'\n')
+            return
 
 while True:
     sid = eval(input("sid: ").strip())
