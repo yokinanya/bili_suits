@@ -4,10 +4,9 @@ from os import makedirs as osMakedirs
 from json import dumps, loads
 
 ua = {
-    'user-agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 Edg/108.0.1462.54',
-    'referer' : 'https://www.bilibili.com',
-    'Content-Type' : 'application/json'
-}
+    'user-agent' : 'Mozilla/5.0 BiliDroid/6.73.1 (bbcallen@gmail.com) os/android model/Mi 10 Pro mobi_app/android build/6731100 channel/xiaomi innerVer/6731110 osVer/12 network/2'
+    }
+
 ub.util.ssl_.DEFAULT_CIPHERS = "TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-GCM-SHA256:TLS13-AES-256-GCM-SHA384:ECDHE:!COMPLEMENTOFDEFAULT"
 rq = ub.PoolManager(cert_reqs = 'CERT_NONE')
 ub.disable_warnings()
@@ -28,18 +27,16 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
         return
 
     res = loads(rq_get.data.decode())
-
-    #if res['data']['item']['item_id'] == 0:
-        #errors._show_error(0)
-        #return dict(), 0
-
+    
     # Save suit !!
-    if res['data']['item']['name']:
-        base_dir += res['data']['item']['name']
+    if not res['data']['item']['item_id'] == 0:
+        sname = res['data']['item']['name']
+        base_dir += sname
         if not osPathExists(base_dir):
             osMakedirs(base_dir)
         with open(base_dir + '/suit_info.json', 'w', encoding='utf-8') as suit_json_file:
             suit_json_file.write(str(rq_get.data.decode()))
+        print(f'Saving suit: {sname}')
     else:
         base_dir += str(suit_id)
         if not osPathExists(base_dir):
@@ -54,25 +51,26 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
         (item['name'][1:-1], item['properties']['image'])
         for item in res['data']['suit_items']['emoji_package'][0]['items']
     ]
-    if not osPathExists(base_dir + '/emoji/'):
-        osMakedirs(base_dir + '/emoji/')
+    if not osPathExists(base_dir + '/'+ sname + '/'):
+        osMakedirs(base_dir + '/'+ sname + '/')
 
     for i, item in enumerate(emoji_list):
         img_name = item[0]
         try:
-            with open(base_dir + '/emoji/' + img_name + '.png',
+            with open(base_dir + '/'+ sname + '/' + img_name + '.png',
                       'wb') as emoji_file:
                 emoji_file.write(rq.request('GET' , item[1]).data)
         except OSError:
             img_name = img_name.split('_')[0] + '_{}'.format(i)
             try:
-                with open(base_dir + '/emoji/' + img_name + '.png', 'wb') as emoji_file:
+                with open(base_dir + '/'+ sname + '/' + img_name + '.png', 'wb') as emoji_file:
                     emoji_file.write(rq.request('GET' , item[1]).data)
             except:
                 pass
         except Exception as e:
             print('Error2:\n'+str(e)+'\n')
             return
+    print('Emoji part finished')
 
     # part 2. Background
     bg_dict = res['data']['suit_items']['space_bg'][0]['properties']
@@ -93,6 +91,7 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
         except Exception as e:
             print('Error3:\n'+str(e)+'\n')
             return
+    print('Background part finished')
 
     # part 3. Others
     if not osPathExists(base_dir + '/properties/'):
@@ -201,7 +200,9 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
             print('Error6:\n'+str(e)+'\n')
             return
 
-    #return res
+    print(f'Suit \"{sname}\" has been successfully saved!')
+    
 while True:
-    sid = eval(input("sid: ").strip())
+    spl = '-'*67
+    sid = eval(input(spl + "\nsuit id: ").strip())
     get_suit(sid)

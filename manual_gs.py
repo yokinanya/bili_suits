@@ -25,12 +25,14 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
     base_dir += res['data']['item']['name']
 
     # Save suit !!
-    if res['data']['item']['name']:
-        base_dir += res['data']['item']['name']
+    if not res['data']['item']['item_id'] == 0:
+        sname = res['data']['item']['name']
+        base_dir += sname
         if not osPathExists(base_dir):
             osMakedirs(base_dir)
         with open(base_dir + '/suit_info.json', 'w', encoding='utf-8') as suit_json_file:
             suit_json_file.write(rq_get.text)
+        print(f'Saving suit: {sname}')
     else:
         base_dir += str(suit_id)
         if not osPathExists(base_dir):
@@ -64,6 +66,7 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
         except Exception as e:
             print('Error2:\n'+str(e)+'\n')
             return
+    print('Emoji part finished')
 
     # part 2. Background
     bg_dict = res['data']['suit_items']['space_bg'][0]['properties']
@@ -84,6 +87,7 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
         except Exception as e:
             print('Error3:\n'+str(e)+'\n')
             return
+    print('Background part finished')
 
     # part 3. Others
     if not osPathExists(base_dir + '/properties/'):
@@ -191,7 +195,10 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
         except Exception as e:
             print('Error6:\n'+str(e)+'\n')
             return
+        
+    print(f'Suit \"{sname}\" has been successfully saved!')
 
 while True:
-    sid = eval(input("sid: ").strip())
+    spl = '-'*90
+    sid = eval(input(spl + "\nsuit id: ").strip())
     get_suit(sid)
