@@ -22,8 +22,6 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
 
     res = rq_get.json()
 
-    base_dir += res['data']['item']['name']
-
     # Save suit !!
     if not res['data']['item']['item_id'] == 0:
         sname = res['data']['item']['name']
