@@ -3,6 +3,60 @@ from os.path import exists as osPathExists
 from os import makedirs as osMakedirs
 from json import dumps, loads
 
+def sid(x):
+    c = -1
+    op = ''
+    while x[c].isdigit():
+        op+=x[c]
+        c-=1
+    return op[::-1]
+    
+def check(u):
+    try:
+        user = 'http://api.bilibili.com/x/web-interface/card?mid='+u
+        a = rqGet(user)
+        a = loads(a.text)
+        name = a['data']['card']['name']
+        title = '\n用户 {} 的粉丝装扮列表：'.format(name)+'\n'
+        print(title)
+        try:
+            for i in range(1,999): 
+                suits = 'https://app.bilibili.com/x/v2/space/garb/list?ps=50&vmid='+u+'&pn='+str(i)
+                info = rqGet(suits)
+                info = loads(info.text)
+                l=info['data']['list']
+                if l:
+                    count=50*(i-1)+1
+                    for i in range(len(l)):
+                        try:
+                            data = '{}.「{}」{}    装扮ID：{}'.format(count,l[i]['garb_title'],l[i]['fans_number'],sid(l[i]['button']['uri']))+'\n'
+                            print(data)
+                            count+=1
+                        except KeyError:
+                            if l[i]['garb_id'] == 36398:
+                                data = '{}.「舰长装扮」    装扮ID：{}'.format(count,sid(l[i]['button']['uri']))+'\n'
+                                print(data)
+                                count+=1
+                            elif l[i]['garb_id'] == 36399:
+                                data = '{}.「提督装扮」    装扮ID：{}'.format(count,sid(l[i]['button']['uri']))+'\n'
+                                print(data)
+                                count+=1
+                            elif l[i]['garb_id'] == 36400:
+                                data = '{}.「总督装扮」    装扮ID：{}'.format(count,sid(l[i]['button']['uri']))+'\n'
+                                print(data)
+                                count+=1
+                        except Exception as e:
+                            print('Error3:\n'+str(e)+'\n')
+                            return
+                else:
+                    break
+        except Exception as e:
+            print('Error2:\n'+str(e)+'\n')
+            return
+    except Exception as e:
+        print('Error1:\n'+str(e)+'\n')
+        return
+
 def get_suit(suit_id, base_dir='./Bsuits/'):
     '''
     获取单个装扮素材
@@ -32,12 +86,14 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
             suit_json_file.write(rq_get.text)
         print(f'Saving suit: {sname}')
     else:
+        """
         base_dir += str(suit_id)
         if not osPathExists(base_dir):
             osMakedirs(base_dir)
         with open(base_dir + '/suit_info.json', 'w', encoding='utf-8') as suit_json_file:
             suit_json_file.write(rq_get.text)
-        print('Fail to match any suit with this number')
+        """
+        print('Fail to match any suit with this number:(')
         return
 
     # part 1. Emoji
@@ -198,5 +254,20 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
 
 while True:
     spl = '-'*90
-    sid = eval(input(spl + "\nsuit id: ").strip())
-    get_suit(sid)
+    opt = input(spl + "\nInput to check, or skip to download suits: ")
+    if opt:
+        while True:
+            uid = input('\nuid: ').strip()
+            if uid.isdigit() and uid==str(int(uid)):
+                check(uid)
+                break
+            else:
+                uid = input('\nuid: ').strip()
+    else:
+        while True:
+            sid = input("\nsuit id: ").strip()
+            if sid.isdigit() and sid==str(int(sid)):
+                get_suit(sid)
+                break
+            else:
+                sid = input("\nsuit id: ").strip()
