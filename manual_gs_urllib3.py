@@ -54,7 +54,7 @@ def check(u):
                                 print(data)
                                 count+=1
                         except Exception as e:
-                            print('\nError3:\n'+str(e)+'\n')
+                            print('Error3:\n'+str(e)+'\n')
                             return
                 else:
                     break
@@ -62,7 +62,7 @@ def check(u):
             print('Error2:\n'+str(e)+'\n')
             return
     except Exception as e:
-        print('\nError1:\n'+str(e)+'\n')
+        print('Error1:\n'+str(e)+'\n')
         return
 
 
@@ -264,12 +264,12 @@ while True:
     opt = input(spl + "\nInput to check, or skip to download suits: ")
     if opt:
         while True:
-            u = input('\nuid：').strip()
-            if u.isdigit() and u==str(int(u)):
-                check(u)
+            uid = input('\nuid：').strip()
+            if uid.isdigit() and uid==str(int(uid)):
+                check(uid)
                 break
             else:
-                u = input('\nuid：').strip()
+                uid = input('\nuid：').strip()
     else:
         while True:
             sid = input("\nsuit id: ").strip()
