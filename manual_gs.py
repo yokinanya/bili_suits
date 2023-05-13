@@ -54,7 +54,7 @@ def check(u):
             print('Error2:\n'+str(e)+'\n')
             return
     except Exception as e:
-        print('Error1:\n'+str(e)+'\n')
+        print('\nError1:\n'+str(e)+'\n')
         return
 
 def get_suit(suit_id, base_dir='./Bsuits/'):
