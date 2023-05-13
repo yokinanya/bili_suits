@@ -3,7 +3,7 @@ from os.path import exists as osPathExists
 from os import makedirs as osMakedirs
 from json import dumps, loads
 
-def sid(x):
+def suitid(x):
     c = -1
     op = ''
     while x[c].isdigit():
@@ -27,22 +27,22 @@ def check(u):
                 l=info['data']['list']
                 if l:
                     count=50*(i-1)+1
-                    for i in range(len(l)):
+                    for suit in l:
                         try:
-                            data = '{}.「{}」{}    装扮ID：{}'.format(count,l[i]['garb_title'],l[i]['fans_number'],sid(l[i]['button']['uri']))+'\n'
+                            data = '{}.「{}」{}    装扮ID：{}'.format(count,suit['garb_title'],suit['fans_number'],suitid(suit['button']['uri']))+'\n'
                             print(data)
                             count+=1
                         except KeyError:
                             if l[i]['garb_id'] == 36398:
-                                data = '{}.「舰长装扮」    装扮ID：{}'.format(count,sid(l[i]['button']['uri']))+'\n'
+                                data = '{}.「舰长装扮」    装扮ID：{}'.format(count,suitid(suit['button']['uri']))+'\n'
                                 print(data)
                                 count+=1
                             elif l[i]['garb_id'] == 36399:
-                                data = '{}.「提督装扮」    装扮ID：{}'.format(count,sid(l[i]['button']['uri']))+'\n'
+                                data = '{}.「提督装扮」    装扮ID：{}'.format(count,suitid(suit['button']['uri']))+'\n'
                                 print(data)
                                 count+=1
                             elif l[i]['garb_id'] == 36400:
-                                data = '{}.「总督装扮」    装扮ID：{}'.format(count,sid(l[i]['button']['uri']))+'\n'
+                                data = '{}.「总督装扮」    装扮ID：{}'.format(count,suitid(suit['button']['uri']))+'\n'
                                 print(data)
                                 count+=1
                         except Exception as e:
