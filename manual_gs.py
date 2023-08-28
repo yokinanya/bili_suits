@@ -54,7 +54,7 @@ def check(u):
             print('Error2:\n'+str(e)+'\n')
             return
     except Exception as e:
-        print('\nError1:\n'+str(e)+'\n')
+        print('Error1:\n'+str(e)+'\n')
         return
 
 def get_suit(suit_id, base_dir='./Bsuits/'):
@@ -250,7 +250,7 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
             print('Error6:\n'+str(e)+'\n')
             return
         
-    print(f'Suit \"{sname}\" has been successfully saved!')
+    print(f'The suit \"{sname}\" has been successfully saved!')
 
 while True:
     spl = '-'*90

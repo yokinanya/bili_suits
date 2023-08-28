@@ -27,13 +27,22 @@ def get_all_suit(query=None, refresh=0, page=0):
         for cat in res['data']['category']:
             try:
                 for suit in cat['suits']:
-                    base_list.append({
-                        'name': suit['name'],
-                        'item_id': suit['item_id'],
-                        'category': cat['name'],
-                        'desc': suit['properties']['desc'],
-                        'cover': suit['properties']['image_cover']
-                    })
+                    try:
+                        base_list.append({
+                            'name': suit['name'],
+                            'item_id': suit['item_id'],
+                            'category': cat['name'],
+                            'desc': suit['properties']['desc'],
+                            'cover': suit['properties']['image_cover']
+                        })
+                    except KeyError:
+                        base_list.append({
+                            'name': suit['name'],
+                            'item_id': suit['item_id'],
+                            'category': cat['name'],
+                            'desc': 'null',
+                            'cover': suit['properties']['image_cover']
+                        })
             except TypeError:
                 continue
         try:
