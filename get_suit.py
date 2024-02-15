@@ -17,8 +17,15 @@ def get_all_suit(query=None, refresh=0, page=0):
     '''
     base_list = list()
     if (refresh == 1 or not osPathExists('suit_list.json')):
+        _headers = {
+            "user-agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+            "referer": "https://api.bilibili.com/x/garb/mall/suit/all",
+            "authority": "api.bilibili.com"
+        }
         try:
-            res = rqGet('https://api.bilibili.com/x/garb/mall/suit/all')
+            res = rqGet('https://api.bilibili.com/x/garb/mall/suit/all',
+                        headers=_headers)
         except:
             errors._show_error(1)
             return list(), 0, 0, 1
@@ -29,19 +36,29 @@ def get_all_suit(query=None, refresh=0, page=0):
                 for suit in cat['suits']:
                     try:
                         base_list.append({
-                            'name': suit['name'],
-                            'item_id': suit['item_id'],
-                            'category': cat['name'],
-                            'desc': suit['properties']['desc'],
-                            'cover': suit['properties']['image_cover']
+                            'name':
+                            suit['name'],
+                            'item_id':
+                            suit['item_id'],
+                            'category':
+                            cat['name'],
+                            'desc':
+                            suit['properties']['desc'],
+                            'cover':
+                            suit['properties']['image_cover']
                         })
                     except KeyError:
                         base_list.append({
-                            'name': suit['name'],
-                            'item_id': suit['item_id'],
-                            'category': cat['name'],
-                            'desc': 'null',
-                            'cover': suit['properties']['image_cover']
+                            'name':
+                            suit['name'],
+                            'item_id':
+                            suit['item_id'],
+                            'category':
+                            cat['name'],
+                            'desc':
+                            'null',
+                            'cover':
+                            suit['properties']['image_cover']
                         })
             except TypeError:
                 continue
@@ -94,6 +111,7 @@ def get_all_suit(query=None, refresh=0, page=0):
                 return list(), 0, 0, 1
     return base_list, total_page, page, 100
 
+
 def get_suit(suit_id, base_dir='./Bsuits/'):
     '''
     获取单个装扮素材
@@ -123,7 +141,8 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
     # Save suit !!
     if not osPathExists(base_dir):
         osMakedirs(base_dir)
-    with open(base_dir + '/suit_info.json', 'w', encoding='utf-8') as suit_json_file:
+    with open(base_dir + '/suit_info.json', 'w',
+              encoding='utf-8') as suit_json_file:
         suit_json_file.write(rq_get.text)
 
     # part 1. Emoji
@@ -144,7 +163,8 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
             errors._show_error(4)
             img_name = img_name.split('_')[0] + '_{}'.format(i)
             try:
-                with open(base_dir + '/emoji/' + img_name + '.png', 'wb') as emoji_file:
+                with open(base_dir + '/emoji/' + img_name + '.png',
+                          'wb') as emoji_file:
                     emoji_file.write(rqGet(item[1]).content)
             except:
                 pass
@@ -177,121 +197,107 @@ def get_suit(suit_id, base_dir='./Bsuits/'):
     if not osPathExists(base_dir + '/properties/'):
         osMakedirs(base_dir + '/properties/')
     try:
-        pro_list = [
-            ('fan_share_image.jpg',
-             res['data']['item']['properties']['fan_share_image']),
-            ('image_cover.jpg', res['data']['item']['properties']['image_cover']),
-            ('avatar.jpg', res['data']['fan_user']['avatar'])
-        ]
+        pro_list = [('fan_share_image.jpg',
+                     res['data']['item']['properties']['fan_share_image']),
+                    ('image_cover.jpg',
+                     res['data']['item']['properties']['image_cover']),
+                    ('avatar.jpg', res['data']['fan_user']['avatar'])]
     except:
         errors._show_error(1)
         return dict(), 1
 
     try:
-        pro_list.append(
-            ('comment_bg.png', res['data']['suit_items']['card_bg'][0]['properties']['image_preview_small'])
-            )
+        pro_list.append(('comment_bg.png', res['data']['suit_items']['card_bg']
+                         [0]['properties']['image_preview_small']))
     except:
         pass
 
     try:
-        pro_list = [
-            ('fan_share_image.jpg',
-             res['data']['item']['properties']['fan_share_image']),
-            ('image_cover.jpg', res['data']['item']['properties']['image_cover']),
-            ('avatar.jpg', res['data']['fan_user']['avatar'])
-        ]
+        pro_list = [('fan_share_image.jpg',
+                     res['data']['item']['properties']['fan_share_image']),
+                    ('image_cover.jpg',
+                     res['data']['item']['properties']['image_cover']),
+                    ('avatar.jpg', res['data']['fan_user']['avatar'])]
     except:
         errors._show_error(5)
         return dict(), 1
 
     try:
-        pro_list.append(
-            ('comment_bg.png', res['data']['suit_items']['card_bg'][0]['properties']['image_preview_small'])
-            )
+        pro_list.append(('comment_bg.png', res['data']['suit_items']['card_bg']
+                         [0]['properties']['image_preview_small']))
     except:
         pass
 
     try:
         spro_list = res['data']['suit_items']['skin']
-        for i,spro in enumerate(spro_list):
-            pro_list.append(
-            (f'skin_properties_{i+1}.zip', spro['properties']['package_url'])
-            )
+        for i, spro in enumerate(spro_list):
+            pro_list.append((f'skin_properties_{i+1}.zip',
+                             spro['properties']['package_url']))
     except:
         errors._show_error(5)
         return dict(), 1
 
     try:
+        pro_list.append(('card_fans.png', res['data']['suit_items']['card'][0]
+                         ['properties']['image_preview_small']))
         pro_list.append(
-            ('card_fans.png', res['data']['suit_items']['card'][0]['properties']['image_preview_small'])
-            )
-        pro_list.append(
-            ('card.png', res['data']['suit_items']['card'][1]['properties']['image'])
-            )
-    except:
-        pass
-        
-    try:
-        pro_list.append(
-            ('card_fans.png', res['data']['suit_items']['card'][1]['properties']['image_preview_small'])
-            )
-        pro_list.append(
-            ('card.png', res['data']['suit_items']['card'][0]['properties']['image'])
-            )
+            ('card.png',
+             res['data']['suit_items']['card'][1]['properties']['image']))
     except:
         pass
 
+    try:
+        pro_list.append(('card_fans.png', res['data']['suit_items']['card'][1]
+                         ['properties']['image_preview_small']))
+        pro_list.append(
+            ('card.png',
+             res['data']['suit_items']['card'][0]['properties']['image']))
+    except:
+        pass
 
     try:
-        pro_list.append(
-            ('thumbup.png',res['data']['suit_items']['thumbup'][0]['properties']['image_preview'])
-            )
+        pro_list.append(('thumbup.png', res['data']['suit_items']['thumbup'][0]
+                         ['properties']['image_preview']))
     except:
         pass
-    
+
     try:
-        pro_list.append(
-            ('loading.webp', res['data']['suit_items']['loading'][0]['properties']['loading_url'])
-            )
+        pro_list.append(('loading.webp', res['data']['suit_items']['loading']
+                         [0]['properties']['loading_url']))
     except:
         pass
-    
+
     try:
-        pro_list.append(
-            ('loading_preview.png', res['data']['suit_items']['loading'][0]['properties']['image_preview_small'])
-            )
-    except:
-        pass
-    
-    try:
-        pro_list.append(
-            ('pendant.png', res['data']['suit_items']['pendant'][0]['properties']['image'])
-            )
-    except:
-        pass
-    
-    try:
-        pro_list.append(
-            ('play_icon.png', res['data']['suit_items']['play_icon'][0]['properties']['static_icon_image'])
-            )
+        pro_list.append(('loading_preview.png', res['data']['suit_items']
+                         ['loading'][0]['properties']['image_preview_small']))
     except:
         pass
 
     try:
         pro_list.append(
-            ('play_icon_left.png', res['data']['suit_items']['play_icon'][0]['properties']['drag_left_png'])
-            )
+            ('pendant.png',
+             res['data']['suit_items']['pendant'][0]['properties']['image']))
     except:
         pass
 
     try:
-        pro_list.append(
-            ('play_icon_right.png', res['data']['suit_items']['play_icon'][0]['properties']['drag_right_png'])
-            )
+        pro_list.append(('play_icon.png', res['data']['suit_items']
+                         ['play_icon'][0]['properties']['static_icon_image']))
     except:
         pass
-    
+
+    try:
+        pro_list.append(('play_icon_left.png', res['data']['suit_items']
+                         ['play_icon'][0]['properties']['drag_left_png']))
+    except:
+        pass
+
+    try:
+        pro_list.append(('play_icon_right.png', res['data']['suit_items']
+                         ['play_icon'][0]['properties']['drag_right_png']))
+    except:
+        pass
+
     for item in pro_list:
         try:
             with open(base_dir + '/properties/' + item[0], 'wb') as pro_file:
